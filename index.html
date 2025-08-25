@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Téléchargements (local)</title>
+    <link rel="stylesheet" href="assets/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+          <h1>Centre de téléchargement</h1>
+          <p class="muted">Organisé : Algorithme · Bibliographie · Autre</p>
+        </div>
+      </header>
+
+      <div class="search">
+        <input id="search" type="search" placeholder="Rechercher… titre, fichier, description">
+      </div>
+
+      <main id="sections">
+        <section>
+          <h2>Algorithme ⚙️</h2>
+          <div id="algorithme" class="cards-grid"></div>
+        </section>
+
+        <section>
+          <h2>Bibliographie 📚</h2>
+          <div id="bibliographie" class="cards-grid"></div>
+        </section>
+
+        <section>
+          <h2>Autre 📦</h2>
+          <div id="autre" class="cards-grid"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Ce site référence les différents articles, codes et documents liés au rapport de stage.</p>
+      </footer>
+
+    </div>
+
+    <!-- === INCLUSIONS (ordre important) ===
+         1) downloads.js (variable window.DOWNLOADS)
+         2) main.js (lit window.DOWNLOADS)
+         N'UTILISE PAS type="application/json" sur la balise <script>
+    -->
+    <script src="downloads.js"></script>
+    <script src="assets/main.js"></script>
+  </body>
+</html>
