@@ -1,4 +1,5 @@
-// assets/viewer.js - lecture locale de window.DOWNLOADS + scroll horizontal via molette
+// assets/viewer.js - lecture locale de window.DOWNLOADS, boîtes plus petites,
+// configuration correcte du bouton de téléchargement, pas d'affichage "Affichage local..."
 (function(){
   function id(n){ return document.getElementById(n); }
   function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[t]); }
@@ -16,9 +17,11 @@
   const rawYamlLink = id('raw-yaml-link');
   const codeTitle = id('code-title');
   const yamlTitle = id('yaml-title');
+  const downloadButton = id('download-button');
 
   function showError(msg){
     errEl.innerHTML = `<div class="error">${escapeHtml(msg)}</div>`;
+    // clear info (we don't want the "Affichage local..." line)
     info.textContent = '';
   }
 
@@ -35,7 +38,6 @@
   function findEntry(){
     if(!downloads || !downloads.length) return null;
     if(p.title){
-      // try multiple strategies (exact, decoded, normalized, partial)
       let entry = downloads.find(d => (d.title || '') === p.title);
       if(entry) return entry;
       try {
@@ -82,16 +84,17 @@
     return;
   }
 
-  // populate
-  codeTitle.textContent = (entry.title || 'Code Python');
-  yamlTitle.textContent = (entry.title ? (entry.title + ' — YAML') : 'YAML / Config');
-  info.textContent = `Affichage local depuis downloads.js — ${entry.title || entry.filename}`;
+  // populate titles
+  codeTitle.textContent = `Code Python — ${entry.title || 'Code'}`;
+  yamlTitle.textContent = `YAML / Config — ${entry.title || 'Config'}`;
+  info.textContent = ''; // keep info empty (user requested to remove the "Affichage local..." text)
 
+  // fill code box or hint to raw path
   if(entry.code_py){
     codeBox.textContent = entry.code_py;
     rawCodeLink.href = entry.code_path ? entry.code_path : '#';
   } else if(entry.code_path){
-    codeBox.textContent = `Pas de code embarqué (code_py absent). Chemin brut : ${entry.code_path}`;
+    codeBox.textContent = `Pas de code embarqué. Chemin brut : ${entry.code_path}`;
     rawCodeLink.href = entry.code_path;
   } else {
     codeBox.textContent = 'Aucun code python embarqué ni path fourni.';
@@ -102,44 +105,39 @@
     yamlBox.textContent = entry.code_yaml;
     rawYamlLink.href = entry.yaml_path ? entry.yaml_path : '#';
   } else if(entry.yaml_path){
-    yamlBox.textContent = `Pas de YAML embarqué (code_yaml absent). Chemin brut : ${entry.yaml_path}`;
+    yamlBox.textContent = `Pas de YAML embarqué. Chemin brut : ${entry.yaml_path}`;
     rawYamlLink.href = entry.yaml_path;
   } else {
     yamlBox.textContent = 'Aucun YAML embarqué ni path fourni.';
     rawYamlLink.href = '#';
   }
 
-  // --- horizontal scrolling with mouse wheel on code boxes ---
-  // convert vertical wheel to horizontal scroll when hovering a code box.
-function attachHorizontalWheel(el) {
-  el.addEventListener('wheel', function(e) {
-    // Défilement horizontal UNIQUEMENT si Shift est enfoncé
-    if (e.shiftKey) {
-      if (el.scrollWidth > el.clientWidth) {
-        el.scrollLeft += e.deltaY;
-        e.preventDefault();
-      }
-    }
-    // Sinon, défilement vertical normal (comportement par défaut)
-  }, { passive: false });
-}
+  // --- configure download button to download the ZIP located in files/<entry.filename> ---
+  if(entry.filename){
+    // Build safe href: prepend files/ if the filename doesn't already include leading path
+    const href = encodeURI('files/' + entry.filename.replace(/^\/+/, ''));
+    downloadButton.href = href;
+    downloadButton.download = entry.filename.split('/').pop();
+    downloadButton.style.display = 'inline-block';
+  } else {
+    downloadButton.style.display = 'none';
+  }
 
-
-  // Attach to both code and yaml boxes
-  attachHorizontalWheel(codeBox);
-  attachHorizontalWheel(yamlBox);
-
-  // allow keyboard arrows: left/right scrolls horizontally when focused
+  // --- KEYBOARD horizontal scrolling (keep for accessibility) ---
   codeBox.addEventListener('keydown', (e) => {
     if(e.key === 'ArrowRight') { codeBox.scrollLeft += 40; e.preventDefault(); }
     if(e.key === 'ArrowLeft')  { codeBox.scrollLeft -= 40; e.preventDefault(); }
+    if(e.key === 'ArrowDown')  { codeBox.scrollTop  += 40; e.preventDefault(); }
+    if(e.key === 'ArrowUp')    { codeBox.scrollTop  -= 40; e.preventDefault(); }
   });
   yamlBox.addEventListener('keydown', (e) => {
     if(e.key === 'ArrowRight') { yamlBox.scrollLeft += 40; e.preventDefault(); }
     if(e.key === 'ArrowLeft')  { yamlBox.scrollLeft -= 40; e.preventDefault(); }
+    if(e.key === 'ArrowDown')  { yamlBox.scrollTop  += 40; e.preventDefault(); }
+    if(e.key === 'ArrowUp')    { yamlBox.scrollTop  -= 40; e.preventDefault(); }
   });
 
-  // copy buttons behavior
+  // copy buttons
   copyCodeBtn.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(codeBox.textContent || '');
