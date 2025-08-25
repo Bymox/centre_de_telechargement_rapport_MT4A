@@ -79,24 +79,6 @@ window.DOWNLOADS = [
   "version": "pdf",
   "size_bytes": 93000,
 },
-
-
-
-
-
-//-----------------------------------------------------------------------------
-{
-  "filename": "code/Architecture_verif.zip",
-  "title": "Vérification Architecture",
-  "category": "algorithme",
-  "version": "final",
-  "size_bytes": 15612,
-  "description": "Calcul NF, gain, P1dB en cascade.",
-  "code_py":"",
-  "code_py":"",
-  "code_path": "files/code/Architecture_verif/Architecture_verif.py",
-  "yaml_path": "files/code/Architecture_verif/param.yaml"
-},
 ];
 
 
