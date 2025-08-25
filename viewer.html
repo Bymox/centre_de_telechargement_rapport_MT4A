@@ -7,74 +7,48 @@
     <link rel="stylesheet" href="assets/style.css">
     <style>
       /* layout fixe : la page ne s'agrandit pas avec le contenu */
-      html,body{height:100%;margin:0}
-      .container{
-        height:100vh;                /* prend tout l'écran */
-        display:flex;
-        flex-direction:column;
-        padding:18px;
-        box-sizing:border-box;
+      html, body { height: 100%; margin: 0; }
+      .container { height: 100vh; display: flex; flex-direction: column; padding: 18px; box-sizing: border-box; max-width: 1200px; margin: 0 auto; }
+      .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+      #download-button { padding: 6px 12px; background: var(--accent); color: #071026; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: none; }
+      .viewer { display: flex; gap: 12px; flex: 1; min-height: 0; align-items: stretch; width: 100%; }
+      .panel { flex: 1; display: flex; flex-direction: column; border-radius: 10px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); padding: 12px; min-width: 0; min-height: 0; width: 50%; }
+      .panel .title { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+      /* ↓↓↓ Reduit la hauteur des boîtes de code (demande de l'utilisateur) ↓↓↓ */
+      .code-box { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; font-size: 14px; background: #021123; color: #dbeafe; padding: 10px; border-radius: 8px; overflow: auto; white-space: pre; /* pas de wrap */ flex: none; /* ne prend pas tout l'espace */ height: 260px; max-height: 40vh; min-height: 620px; width: 100%; box-sizing: border-box; }
+      /* ↑↑↑ boîtes plus petites — ajustables (height / max-height) ↑↑↑ */
+      .controls { display: flex; gap: 8px; align-items: center; }
+      .note { color: var(--muted); font-size: 13px; margin-top: 10px; text-align:left; }
+      .error { color: #ffdede; background: #5a1414; padding: 8px; border-radius: 6px; margin-top: 8px; }
+      .code-box:focus { outline: 2px solid rgba(96, 165, 250, 0.14); }
+      /* Responsive : empile les panels sur petit écran */
+      @media (max-width: 820px) {
+        .viewer { flex-direction: column; }
+        .panel { width: 100%; }
+        .code-box { height: 220px; }
       }
-      /* header déjà présent => .viewer prend le reste */
-      .viewer {
-        display:flex;
-        gap:12px;
-        flex:1;                      /* occupe l'espace restant */
-        min-height:0;                /* important pour overflow correct */
-        align-items:stretch;
-      }
-
-      .panel {
-        flex:1;
-        display:flex;
-        flex-direction:column;
-        border-radius:10px;
-        border:1px solid var(--border);
-        background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
-        padding:12px;
-        min-width:0;                 /* essentiel pour empêcher l'expansion horizontale */
-        min-height:0;                /* idem pour l'axe vertical */
-      }
-
-      .panel .title{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
-
-      /* zone de code : ne grandit pas, scroll interne (vertical + horizontal) */
-      .code-box {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-        font-size:13px;
-        background:#021123;
-        color:#dbeafe;
-        padding:10px;
-        border-radius:8px;
-        /* fixation : prend tout l'espace disponible sans étirer la page */
-        overflow:auto;               /* scroll vertical et horizontal internes */
-        white-space:pre;             /* ne wrap pas les lignes */
-        flex:1;                      /* prend l'espace restant dans le panel */
-        max-height: none;
-      }
-
-      /* petits ajustements pour boutons / contrôles */
-      .controls { display:flex; gap:8px; align-items:center; }
-      .note { color:var(--muted); font-size:13px; margin-top:10px; }
-      .error { color:#ffdede; background:#5a1414; padding:8px; border-radius:6px; margin-top:8px; }
-      /* Indicateur discret quand on est sur la zone de code */
-      .code-box:focus { outline: 2px solid rgba(96,165,250,0.14); }
     </style>
   </head>
   <body>
     <div class="container">
-      <div style="display: flex; align-items: center; gap: 12px; margin-left: -8px;">
-        <a href="index.html" class="badge">Retour</a>
-        <h1 style="margin: 0;">Viewer — Code / YAML</h1>
+      <div class="header-container">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a href="index.html" class="badge">Retour</a>
+          <h1 style="margin:0;" id="viewer-title">Viewer — Code / YAML</h1>
+        </div>
+
+        <!-- bouton téléchargement : sera configuré par assets/viewer.js -->
+        <a id="download-button" class="button" href="#" download> Télécharger ZIP </a>
       </div>
 
-
-      <div id="info" class="note" style="margin-top:10px">Chargement…</div>
+      <!-- NOTE: on garde l'élément info mais on n'affiche plus la ligne "Affichage local..." -->
+      <div id="info" class="note" style="margin-top:10px"></div>
 
       <div class="viewer" id="viewer" aria-live="polite">
+        <!-- Panel Code Python -->
         <div class="panel" aria-label="Code Python">
           <div class="title">
-            <strong id="code-title">Code Python</strong>
+            <strong id="code-title">Code Python — <span id="code-name">Nom du code</span></strong>
             <div class="controls">
               <button id="copy-code" class="button secondary">Copier le code</button>
               <a id="raw-code-link" class="button" href="#" target="_blank" rel="noopener">Ouvrir brut</a>
@@ -83,9 +57,10 @@
           <pre id="code-box" class="code-box" tabindex="0">…</pre>
         </div>
 
+        <!-- Panel YAML -->
         <div class="panel" aria-label="YAML">
           <div class="title">
-            <strong id="yaml-title">YAML / Config</strong>
+            <strong id="yaml-title">YAML / Config — <span id="yaml-name">Nom du code</span></strong>
             <div class="controls">
               <button id="copy-yaml" class="button secondary">Copier le YAML</button>
               <a id="raw-yaml-link" class="button" href="#" target="_blank" rel="noopener">Ouvrir brut</a>
@@ -96,100 +71,11 @@
       </div>
 
       <div id="error" style="margin-top:12px"></div>
-
     </div>
-    <style>
-  /* layout fixe : la page ne s'agrandit pas avec le contenu */
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
 
-  .container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 18px;
-    box-sizing: border-box;
-    max-width: 1200px; /* Conteneur plus large pour les zones de code */
-    margin: 0 auto;
-  }
-
-  /* Les panels prennent toute la largeur disponible */
-  .viewer {
-    display: flex;
-    gap: 12px;
-    flex: 1;
-    min-height: 0;
-    align-items: stretch;
-    width: 100%;
-  }
-
-  /* Chaque panel prend 50% de la largeur */
-  .panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
-    padding: 12px;
-    min-width: 0;
-    min-height: 0;
-    width: 50%; /* Partage équitable de l'espace */
-  }
-
-  /* Zone de code : plus large et police légèrement agrandie */
-  .code-box {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-    font-size: 14px; /* Taille de police augmentée */
-    background: #021123;
-    color: #dbeafe;
-    padding: 10px;
-    border-radius: 8px;
-    overflow: auto;
-    white-space: pre;
-    flex: 1;
-    min-width: 100%; /* Prend toute la largeur du panel */
-    min-height: 350px; /* Hauteur minimale pour limiter le défilement vertical */
-  }
-
-  /* Le reste de ton CSS existant (title, controls, note, etc.) reste inchangé */
-  .panel .title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  .controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .note {
-    color: var(--muted);
-    font-size: 13px;
-    margin-top: 10px;
-  }
-
-  .error {
-    color: #ffdede;
-    background: #5a1414;
-    padding: 8px;
-    border-radius: 6px;
-    margin-top: 8px;
-  }
-
-  .code-box:focus {
-    outline: 2px solid rgba(96, 165, 250, 0.14);
-  }
-</style>
-
-    <!-- ordre important : downloads.js puis viewer.js -->
+    <!-- Chargement de downloads.js en premier -->
     <script src="downloads.js"></script>
+    <!-- Chargement de viewer.js (logique : rempli les boxes, configure le bouton download, etc.) -->
     <script src="assets/viewer.js"></script>
   </body>
 </html>
