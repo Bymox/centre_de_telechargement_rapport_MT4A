@@ -15,7 +15,7 @@
       .panel { flex: 1; display: flex; flex-direction: column; border-radius: 10px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); padding: 12px; min-width: 0; min-height: 0; width: 50%; }
       .panel .title { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
       /* ↓↓↓ Reduit la hauteur des boîtes de code (demande de l'utilisateur) ↓↓↓ */
-      .code-box { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; font-size: 14px; background: #021123; color: #dbeafe; padding: 10px; border-radius: 8px; overflow: auto; white-space: pre; /* pas de wrap */ flex: none; /* ne prend pas tout l'espace */ height: 260px; max-height: 40vh; min-height: 620px; width: 100%; box-sizing: border-box; }
+      .code-box { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; font-size: 14px; background: #021123; color: #dbeafe; padding: 10px; border-radius: 8px; overflow: auto; white-space: pre; /* pas de wrap */ flex: none; /* ne prend pas tout l'espace */ height: 260px; max-height: 40vh; min-height: 630px; width: 100%; box-sizing: border-box; }
       /* ↑↑↑ boîtes plus petites — ajustables (height / max-height) ↑↑↑ */
       .controls { display: flex; gap: 8px; align-items: center; }
       .note { color: var(--muted); font-size: 13px; margin-top: 10px; text-align:left; }
@@ -32,11 +32,11 @@
   <body>
     <div class="container">
       <div class="header-container">
-        <div style="display:flex;align-items:center;gap:12px;">
+       <div style="display:flex;align-items:center;gap:12px;">
           <a href="index.html" class="badge">Retour</a>
-          <body>
-          <h1 style="margin:0;" id="viewer-title">Viewer — Code / YAML</h1>
+          <h1 style="margin:0;" id="viewer-title">Viewer — </h1>
         </div>
+
 
         <!-- bouton téléchargement : sera configuré par assets/viewer.js -->
         <a id="download-button" class="button" href="#" download> Télécharger ZIP </a>
