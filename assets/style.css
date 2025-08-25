@@ -5,12 +5,12 @@
 html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
 .container{max-width:1100px;margin:28px auto;padding:20px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-h1{margin:0;font-size:24px}
+h1{margin:0;font-size:34px}
 .muted{margin:4px 0 0;color:var(--muted);font-size:13px}
 .badge{font-size:12px;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid var(--border);color:var(--muted)}
 .search{margin:18px 0}
 .search input{width:100%;padding:12px;border-radius:12px;background:#071026;border:1px solid var(--border);color:var(--text);font-size:14px}
-h2{margin:20px 0 12px 0;color:var(--accent);font-size:18px}
+h2{margin:20px 0 12px 0;color:var(--accent);font-size:25px}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .card{
   background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));
@@ -59,3 +59,10 @@ h2{margin:20px 0 12px 0;color:var(--accent);font-size:18px}
 .footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:left}
 code{background:#071124;padding:2px 6px;border-radius:6px;color:var(--muted);font-size:12px}
 .empty-note{color:var(--muted);font-size:13px;padding:8px 12px;border:1px dashed var(--border);border-radius:10px}
+
+hr {
+      border:none; 
+      height:3px; 
+      background:#009e6f; 
+      margin: 10px 10px 20px 10px;
+    }
