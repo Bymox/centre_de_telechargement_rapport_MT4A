@@ -137,6 +137,15 @@
     if(e.key === 'ArrowUp')    { yamlBox.scrollTop  -= 40; e.preventDefault(); }
   });
 
+  // extrait le paramètre "title" de l'URL
+const urlParams = new URLSearchParams(window.location.search);
+const projectTitle = urlParams.get("title") || "Code / YAML";
+
+// maj du titre de la page
+document.getElementById("viewer-title").textContent = "Viewer — " + projectTitle;
+
+// on garde le reste qui remplit les boxes
+
   // copy buttons
   copyCodeBtn.addEventListener('click', async () => {
     try {
@@ -158,4 +167,3 @@
   });
 
 })();
-
