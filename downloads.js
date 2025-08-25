@@ -19,6 +19,7 @@ window.DOWNLOADS = [
   "filename": "code/Spurious_finder.zip",
   "title": "Spurious Finder",
   "category": "algorithme",
+  "versionweb": "https://bymox.github.io/rapport_stage_mt4a/spurious_finder.html",
   "version": "code",
   "size_bytes": 15612,
   "description": "Calcul des produits de mélange d'un mixer.",
@@ -31,6 +32,7 @@ window.DOWNLOADS = [
   "filename": "code/Architecture_verif.zip",
   "title": "Vérification Architecture",
   "category": "algorithme",
+  "versionweb": "https://bymox.github.io/rapport_stage_mt4a/architecture_verif.html",
   "version": "code",
   "size_bytes": 15612,
   "description": "Calcul NF, gain, P1dB en cascade.",
@@ -79,6 +81,24 @@ window.DOWNLOADS = [
   "version": "pdf",
   "size_bytes": 93000,
 },
+
+
+
+
+
+//-----------------------------------------------------------------------------
+// {
+//   "filename": "code/Architecture_verif.zip",
+//   "title": "Vérification Architecture",
+//   "category": "algorithme",
+//   "version": "final",
+//   "size_bytes": 15612,
+//   "description": "Calcul NF, gain, P1dB en cascade.",
+//   "code_py":"",
+//   "code_py":"",
+//   "code_path": "files/code/Architecture_verif/Architecture_verif.py",
+//   "yaml_path": "files/code/Architecture_verif/param.yaml"
+// },
 ];
 
 
