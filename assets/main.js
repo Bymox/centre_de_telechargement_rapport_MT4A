@@ -19,15 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // For algorithme: viewer reads window.DOWNLOADS and shows inline code (code_py / code_yaml)
     let openHref = hrefFile;
-    if ((it.category || '').toString().toLowerCase().trim() === 'algorithme'){
+    const category = ((it.category || '') + '').toString().toLowerCase().trim();
+    if (category === 'algorithme'){
       openHref = 'viewer.html?title=' + encodeURIComponent(it.title || filename);
     }
 
-    const actions = `
-      <a class="button" href="${hrefFile}" ${isPdf || isZip ? 'download' : ''}>Télécharger</a>
-      ${(it.category || '').toString().toLowerCase().trim() === 'bibliographie' ? '' : `<a class="button secondary" href="${openHref}">Ouvrir</a>`}
-    `;
+    // build action buttons conditionally
+    // download button (always shown if there's a filename)
+    const downloadBtn = filename ? `<a class="button" href="${hrefFile}" ${isPdf || isZip ? 'download' : ''}>Télécharger</a>` : '';
 
+    // open button: not for bibliographie (keeps previous behavior)
+    const openBtn = (category === 'bibliographie')
+      ? ''
+      : `<a class="button secondary" href="${openHref}">Ouvrir</a>`;
+
+    // version web button: only if it.versionweb est présent
+    const webBtn = (it.versionweb && String(it.versionweb).trim().length)
+      ? `<a class="button secondary" href="${it.versionweb}" target="_blank" rel="noopener">🔗Web</a>`
+      : '';
+
+    const actions = `
+      ${downloadBtn}
+      ${openBtn}
+      ${webBtn}
+    `;
 
     el.innerHTML = `
       <div class="head">
@@ -43,14 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="actions">${actions}</div>
     `;
 
+    // click on card (outside links) — ouvre le "openHref" dans le même onglet
     el.addEventListener('click', (ev) => {
       if (ev.target.tagName.toLowerCase() === 'a' || ev.target.closest('a')) return;
       window.location.href = openHref; // Ouvre dans le même onglet
     });
 
-
     return el;
   }
+
 
   function render(filtered){
     const grouped = { algorithme: [], bibliographie: [], autre: [] };
