@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr" data-theme="a">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>s2p → dB — Conversion locale</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    html,body{height:100%;margin:0}
+    .container{max-width:1200px;margin:18px auto;padding:18px;box-sizing:border-box}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .left{display:flex;align-items:center;gap:12px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);text-decoration:none;color:var(--muted)}
+    h1{margin:0;font-size:18px}
+    .controls{display:flex;gap:8px;align-items:center}
+    .panel{border:1px solid var(--border);border-radius:10px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02))}
+    .meta-note{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .row{display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    input[type=file]{padding:6px}
+    .button{display:inline-block;padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:600;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071026}
+    .button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .actions{margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .result-box{margin-top:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:13px}
+    .error{color:#ffdede;background:#5a1414;padding:8px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="left">
+        <a id="back-link" class="badge" href="../index.html">← Retour</a>
+        <h1>s2p → dB (local)</h1>
+      </div>
+      <div class="controls">
+        <a id="download-button" class="button" href="../files/code/real_imag_to_db.zip" download> Télécharger ZIP </a>
+        <a id="raw-code-link" class="button" href="../files/code/real_imag_to_db/real_imag_to_db.py" target="_blank" rel="noopener">Ouvrir brut</a>
+        <button id="copy-code" class="button secondary">Copier le code</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="meta-note">
+        Ce script prend en entrée un fichier <code>.s2p</code> local et convertit les paramètres S11/S21 (réel + imaginaire) en amplitude dB.<br>
+        Les fichiers générés sont : <code>_S11.dat</code> et <code>_S21.dat</code> (format : Frequency(Hz) TAB Sxx(dB)).<br>
+        Le code Python utilisé pour cette conversion est <code>real_imag_to_db.py</code>.
+      </div>
+
+      <div class="row">
+        <!-- <label class="button" id="s2p-label">Choisir .s2p -->
+          <input id="s2p-file" type="file" accept=".s2p,.txt,.dat" style="display:none">
+        </label>
+      </div>
+
+      <pre id="code-box" class="code-box" tabindex="0">
+# Script Python utilisé : real_imag_to_db.py
+# Contenu visible ici pour copie ou ouverture brut
+      </pre>
+
+      <div id="error" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <script src="../assets/s2p_viewer_dB.js" defer></script>
+  <script>
+    // affichage nom fichier choisi
+    const s2pInput = document.getElementById('s2p-file');
+    const s2pLabel = document.getElementById('s2p-label');
+
+    s2pInput.addEventListener('change', () => {
+      if (s2pInput.files.length) {
+        s2pLabel.textContent = s2pInput.files[0].name;
+      } else {
+        s2pLabel.textContent = "Choisir .s2p";
+      }
+    });
+  </script>
+</body>
+
+</html>
