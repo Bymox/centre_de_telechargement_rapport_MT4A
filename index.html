@@ -31,10 +31,10 @@
       .section-title{display:flex;gap:12px;align-items:center}
       .section-title h2{margin:0;font-size:20px}
       .count{font-size:13px;color:var(--muted)}
-      hr{border:0;border-top:1px solid rgb(0, 169, 175);margin:12px 0;border-radius:2px}
+      hr{border:0;border-top:3px solid rgb(0, 114, 180);margin:12px 0;border-radius:2px}
       .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--gap)}
       .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:var(--card-radius);box-shadow:0 6px 18px rgba(3,6,12,0.6);cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:transform .16s ease, box-shadow .16s ease}
-      .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(3,6,12,0.7)}
+      .card:hover{box-shadow:0 18px 40px rgba(3,6,12,0.7)}
       .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
       .head h3{margin:0;font-size:15px}
       .badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
@@ -44,6 +44,9 @@
       .actions{display:flex;gap:8px;margin-top:6px}
       .button{display:inline-block;padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:600;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#02232b}
       .button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+      /* hover: pas de saut. changement de couleur uniquement sur les boutons */
+      .button:hover{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#00131a}
+      .button.secondary:hover{background:rgba(255,255,255,0.03);color:var(--accent);border-color:rgba(255,255,255,0.12)}
       .empty-note{padding:18px;border-radius:10px;background:rgba(255,255,255,0.02);color:var(--muted)}
       footer{margin-top:20px;color:var(--muted);font-size:13px}
       @media (max-width:720px){.container{padding:12px}.logo{width:48px;height:48px;font-size:18px}.cards-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
@@ -52,7 +55,7 @@
   <body>
     <div class="container" role="application">
       <header class="header">
-        <div class="logo" aria-hidden></div>
+        <div class="logo" aria-hidden>MT</div>
         <div>
           <h1>Centre de téléchargement</h1>
           <p class="muted">Organisé : Algorithme · Bibliographie · Autre</p>
@@ -112,6 +115,4 @@
     <script src="assets/main.js"></script>
   </body>
 </html>
-
-
 
