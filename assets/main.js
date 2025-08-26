@@ -1,3 +1,4 @@
+/* assets/main.js - lit window.DOWNLOADS et rend les cards */
 (function(){
   const items = window.DOWNLOADS || [];
   const searchInput = document.getElementById('search');
