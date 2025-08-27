@@ -47,6 +47,16 @@ window.DOWNLOADS = [
   "yaml_path": "files/code/Architecture_verif/param.yaml"
 },
 
+{
+  "filename": "code/Chain_simulator.zip",
+  "title": "Simulateur",
+  "category": "algorithme",
+  "version": "code",
+  "size_bytes": 1800000,
+  "description": "Simulateur d'une chaine.",
+  liens: "pages/simulateur.html",
+},
+
 //------------------------------------------------------------
 //-------------------- Biblio
 //------------------------------------------------------------
@@ -117,6 +127,7 @@ window.DOWNLOADS = [
   "description": "Convertion d'un S2P amplitude et phase des parametres S en ->freq S11dB S21dB",
   "code_py":"import os  # Permet de manipuler fichiers et dossiers\r\n\r\n# === FONCTION PRINCIPALE ===\r\ndef convert_s2p(s2p_path: str, output_dir: str):\r\n    \"\"\"\r\n    Cette fonction prend un fichier .s2p et cr\u00E9e deux fichiers .dat :\r\n      - <nom_du_fichier>_S11.dat : fr\u00E9quence et S11\r\n      - <nom_du_fichier>_S21.dat : fr\u00E9quence et S21\r\n    \"\"\"\r\n    \r\n    # V\u00E9rifie que le fichier .s2p existe. Si pas trouv\u00E9, arr\u00EAte le programme\r\n    if not os.path.isfile(s2p_path):\r\n        raise FileNotFoundError(f\"Fichier introuvable : {s2p_path}\")\r\n\r\n    # Cr\u00E9e le dossier de sortie si il n\'existe pas encore\r\n    os.makedirs(output_dir, exist_ok=True)\r\n\r\n    # R\u00E9cup\u00E8re le nom du fichier sans son chemin ni son extension\r\n    base = os.path.splitext(os.path.basename(s2p_path))[0]\r\n\r\n    # Cr\u00E9e les chemins des fichiers de sortie\r\n    s11_out = os.path.join(output_dir, f\"{base}_S11.dat\")\r\n    s21_out = os.path.join(output_dir, f\"{base}_S21.dat\")\r\n\r\n    # Ouvre le fichier .s2p pour lecture et les fichiers de sortie pour \u00E9criture\r\n    with open(s2p_path, \"r\") as fin, \\\r\n         open(s11_out, \"w\") as f11, \\\r\n         open(s21_out, \"w\") as f21:\r\n\r\n        # \u00C9crit les titres des colonnes dans les fichiers .dat\r\n        f11.write(\"# freq(Hz)\\tS11\\n\")\r\n        f21.write(\"# freq(Hz)\\tS21\\n\")\r\n\r\n        # Parcourt chaque ligne du fichier .s2p\r\n        for line in fin:\r\n            line = line.strip()  # Supprime les espaces au d\u00E9but et \u00E0 la fin\r\n\r\n            # Ignore les lignes vides et les commentaires\r\n            if not line or line.startswith(\"#\") or line.startswith(\"!\"):\r\n                continue\r\n\r\n            # S\u00E9pare la ligne en morceaux\r\n            parts = line.split()\r\n\r\n            # Si la ligne n\'a pas assez de donn\u00E9es, on l\'ignore\r\n            if len(parts) < 4:\r\n                continue\r\n\r\n            # On prend la fr\u00E9quence, S11 et S21 (colonne 0,1,3)\r\n            freq, s11, s21 = parts[0], parts[1], parts[3]\r\n\r\n            # \u00C9crit les donn\u00E9es dans les fichiers de sortie\r\n            f11.write(f\"{freq}\\t{s11}\\n\")\r\n            f21.write(f\"{freq}\\t{s21}\\n\")\r\n\r\n    # Affiche un message pour dire que la conversion est termin\u00E9e\r\n    print(f\"\u2705 Fichier converti : {s2p_path}\")\r\n    print(f\"   \u2192 S11 : {s11_out}\")\r\n    print(f\"   \u2192 S21 : {s21_out}\")\r\n\r\n\r\n# === PARTIE EXECUTABLE SI ON LANCE LE SCRIPT ===\r\nif __name__ == \"__main__\":\r\n    # === MODIFIEZ CES CHEMINS POUR VOTRE CAS ===\r\n    input_file  = r\"C:\\Users\\a942666\\OneDrive - ATOS\\Bureau\\HPF_4GHz\\HPF4G.s2p\"  # Fichier .s2p \u00E0 convertir\r\n    output_dir  = r\"C:\\Users\\a942666\\OneDrive - ATOS\\Bureau\\S21_HPF.dat\"          # Dossier o\u00F9 mettre les .dat\r\n\r\n    # Appelle la fonction principale pour faire la conversion\r\n    convert_s2p(input_file, output_dir)\r\n",
 },
+
 
 //-----------------------------------------------------------------------------
 // {
