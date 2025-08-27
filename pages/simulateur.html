@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="fr" data-theme="a">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Simulateur RF — README + téléchargement</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    html,body{height:100%;margin:0}
+    .container{max-width:1200px;margin:18px auto;padding:18px;box-sizing:border-box}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .left{display:flex;align-items:center;gap:12px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);text-decoration:none;color:var(--muted)}
+    h1{margin:0;font-size:18px}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .button{display:inline-block;padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:600;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071026}
+    .panel{border:1px solid var(--border);border-radius:10px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02))}
+    .meta-note{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .readme-box{
+      margin-top:12px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);
+      font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:13px;line-height:1.5;overflow:auto;white-space:pre-wrap;tab-size:4
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="left">
+        <a id="back-link" class="badge" href="../index.html">← Retour</a>
+        <h1>Simulateur RF Superhétérodyne — README</h1>
+      </div>
+      <div class="controls">
+        <!-- Mets ici le bon chemin vers ton zip -->
+        <a id="download-button" class="button" href="../files/code/Chain_simulator.zip" download>Télécharger ZIP</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="meta-note">
+        Le bouton ci-dessus télécharge l’archive complète. Le README est affiché ci-dessous pour lecture rapide et copier/coller.
+      </div>
+
+      <pre id="readme-box" class="readme-box" tabindex="0">Chargement du README…</pre>
+    </div>
+  </div>
+
+  <script>
+    // Ton README en Markdown (affiché tel quel pour un copier/coller fidèle)
+    const README_MD = `# Simulateur RF Superhétérodyne
+
+## 1. Présentation
+
+Ce projet permet de simuler une chaîne de réception RF superhétérodyne avec plusieurs composants : filtres, LNA, atténuateurs, switches, mixer, OL Filter, préselecteurs, etc.
+
+Le simulateur calcule pour une fréquence RF donnée :
+
+* Le gain total de la chaîne
+* Le NF (Noise Figure) total
+* L’IP1dB d’entrée
+* Le spectre simulé en sortie avec annotations des fréquences RF et FI
+
+Il est conçu pour être modulable : il suffit de modifier les fichiers YAML pour ajouter ou ajuster les composants et leur configuration.
+
+---
+
+## 2. Structure des fichiers
+
+\`\`\`
+Simulator/
+├── components/           # Définition des composants (classes Python)
+├── config/
+│   ├── components.yaml   # Paramètres des composants
+│   ├── chain.yaml        # Ordre des composants dans la chaîne
+│   └── config.yaml       # Paramètres de simulation (fréquences, plots, variable filters...)
+├── utils/
+│   ├── calculator.py     # Calcul de gain/NF/IP1dB
+│   └── plot.py           # Fonction pour tracer le spectre
+└── simulate_chain.py     # Script principal pour lancer la simulation
+\`\`\`
+
+---
+
+## 3. Fichier \`components.yaml\`
+
+Chaque composant de la chaîne RF est défini ici avec ses paramètres.
+
+### Exemple de composant
+
+\`\`\`yaml
+lna1:
+  type: lna
+  gain_vs_freq:
+    - freq_range_MHz: [2000, 6000]
+      gain_dB: 15
+    - freq_range_MHz: [6000, 20000]
+      gain_dB: 15.5
+  h2_generation:
+    input_dBm: -20
+    h2_dBc: -46
+  out_of_band_attenuation_dB: 10
+  nf_dB: 3.16
+  op1db_dBm: 18.7
+\`\`\`
+
+### Paramètres principaux
+
+| Paramètre                    | Description                                                                                                                         |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| \`type\`                       | Type du composant (\`lna\`, \`switch\`, \`attenuator_fixed\`, \`attenuator_variable\`, \`variable_filter\`, \`filter\`, \`preselector\`, \`mixer\`) |
+| \`gain_vs_freq\`               | Pour LNA : liste de gains en dB selon plage de fréquences                                                                           |
+| \`h2_generation\`              | Pour LNA : harmonique H2 générée (input_dBm, h2_dBc)                                                                                |
+| \`out_of_band_attenuation_dB\` | Atténuation appliquée hors bande du composant                                                                                       |
+| \`nf_dB\`                      | Noise figure du composant                                                                                                           |
+| \`op1db_dBm\`                  | OP1dB du composant                                                                                                                  |
+| \`attenuation_vs_freq\`        | Pour switch : liste d’atténuation par plage de fréquence                                                                            |
+| \`path\`                       | Pour les filtres : chemin vers les fichiers S21                                                                                     |
+| \`filter_name\` / \`state\`      | Pour variable_filter : nom et état du filtre                                                                                       |
+
+**Note** : Les filtres HPF/LPF et les préselecteurs lisent les fichiers S21 pour déterminer la perte appliquée à chaque fréquence.
+
+---
+
+## 4. Fichier \`chain.yaml\`
+
+Définit l’ordre des composants dans la chaîne RF.
+
+Exemple :
+
+\`\`\`yaml
+chain:
+  - name: HPF_4GHz
+  - name: lna1
+  - name: variable_filter_1
+  - name: attenuator_fixed_3dB
+  - name: mixer1
+  - name: ol_filter
+  - name: bpf_500
+\`\`\`
+
+* Les noms doivent correspondre aux clés de \`components.yaml\`
+* Les composants sont appliqués dans cet ordre
+* Le mixer bascule automatiquement la fréquence RF vers la fréquence FI
+
+---
+
+## 5. Fichier \`config.yaml\`
+
+Paramètres généraux de simulation.
+
+### Signaux d’entrée
+
+\`\`\`yaml
+input_signals:
+  6000:
+    power: -20
+    label: "RF"
+  7005:
+    power: -20
+    label: "Image/2"
+\`\`\`
+
+* Clé : fréquence en MHz
+* \`power\` : puissance en dBm
+* \`label\` : étiquette pour le plot
+
+### Fréquence pour les calculs de performances
+
+\`\`\`yaml
+calculator_freq_MHz: 6000
+freq_FI_MHz: 4000
+\`\`\`
+
+* \`calculator_freq_MHz\` : fréquence RF pour calculer gain, NF, IP1dB
+* \`freq_FI_MHz\` : fréquence FI si différente de \`calculator_freq_MHz\`
+
+### Configuration du mixer
+
+\`\`\`yaml
+mixer:
+  lo_freq_MHz: 10000
+  mode: high  # "low" pour infradyne
+\`\`\`
+
+### Variable filters
+
+\`\`\`yaml
+variable_filters:
+  variable_filter_1:
+    filter_name: LPF4
+    state: 0
+\`\`\`
+
+### Plage de calcul et affichage
+
+\`\`\`yaml
+calc_freq_range_MHz: [0, 30000]
+plot_freq_range_MHz: [3500, 4500]
+plot_power_range_dBm: [-175, 30]
+plot_y_tick_step_dB: 10
+plot_x_tick_step_GHz: 0.05
+plot_min_power_dBm: -175
+plot_annot_range_MHz: [3000, 4500]
+plot_annot_color: "#FF00FF"
+\`\`\`
+
+* Contrôle la plage de fréquences et puissances à tracer
+* Définit l’apparence et les annotations du graphique
+
+---
+
+## 6. Exécution
+
+1. Vérifier que tous les fichiers YAML sont présents (\`config/\` et \`data/\`)
+2. Lancer la simulation :
+
+\`\`\`bash
+python simulate_chain.py
+\`\`\`
+
+3. Le script :
+
+   * Construit la chaîne RF
+   * Calcule gain, NF, IP1dB
+   * Simule le spectre et le trace
+   * Sauvegarde le graphique sous \`Spectrum.png\`
+
+---
+
+## 7. Remarques
+
+* Les fichiers S21 doivent être en deux colonnes : fréquence (Hz) et gain/atténuation (dB)
+* Les composants peuvent être ajoutés ou modifiés dans \`components.yaml\` sans toucher au code
+* Les filtres variables utilisent les états définis dans \`config.yaml\` pour simuler la perte exacte
+* Tous les gains et pertes sont cumulés en dB pour le calcul linéaire et en NF selon la formule de Friis
+
+---
+
+**Auteur** : François  
+**Date** : 2025
+`;
+
+    // injection du README dans la <pre> (copiable tel quel)
+    document.getElementById('readme-box').textContent = README_MD;
+  </script>
+</body>
+</html>
