@@ -1,0 +1,22 @@
+# Bande passante de la chaîne considérée (en Hz)
+# Ici : 500 MHz
+bandwidth_hz: 500000000  
+
+# Liste des fréquences à évaluer (en GHz)
+frequencies:
+  - freq_ghz: 6          # Fréquence centrale : 6 GHz
+
+    # Gain du récepteur (ou chaîne RF) en dB
+    # bornes min et max pour représenter la variation du composant
+    gain_min: 17.77      # Gain minimum mesuré/attendu
+    gain_max: 25.95      # Gain maximum mesuré/attendu
+
+    # Bruit équivalent en entrée (NF = Noise Figure), en dB
+    # Attention : dans ton script, c’est "nf_gain_min/max" qui est lu.
+    nf_gain_min: 11.12   # Valeur pessimiste de NF
+    nf_gain_max: 13.24   # Valeur optimiste de NF
+
+    # Point de compression à 1 dB (IP1dB), en dBm
+    # Là encore bornes min et max car dépend des conditions.
+    ip1db_min: -10.64    # IP1dB minimum (pire cas)
+    ip1db_max: -5.39     # IP1dB maximum (meilleur cas)
