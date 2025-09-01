@@ -1,0 +1,48 @@
+mode: supradyne       # ou "infradyne"
+tolerance_hz: 50e6
+weight_center: 15     # poids pour RF
+weight_image: 5      # poids pour fréquence image
+
+lpf_dirs:
+  - dataLPF1
+  - dataLPF2
+  - dataLPF3
+  - dataLPF4
+
+hpf_dirs:
+  - dataHPF1
+  - dataHPF2
+  - dataHPF3
+  - dataHPF4
+
+n_states: 16
+
+targets:
+- center_freq: 6e9
+# - center_freq: 6.5e9
+- center_freq: 7e9
+# - center_freq: 7.5e9
+- center_freq: 8e9
+# - center_freq: 8.5e9
+- center_freq: 9e9
+# - center_freq: 9.5e9
+- center_freq: 10e9
+# - center_freq: 10.5e9
+- center_freq: 11e9
+# - center_freq: 11.5e9
+- center_freq: 12e9
+# - center_freq: 12.5e9
+- center_freq: 13e9
+# - center_freq: 13.5e9
+- center_freq: 14e9
+# - center_freq: 14.5e9
+- center_freq: 15e9
+# - center_freq: 15.5e9
+- center_freq: 16e9
+# - center_freq: 16.5e9
+- center_freq: 17e9
+# - center_freq: 17.5e9
+- center_freq: 18e9
+
+
+
